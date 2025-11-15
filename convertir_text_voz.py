@@ -2,7 +2,7 @@
 
 ## Importanto librerias
 import re
-import nltk
+
 from gtts import gTTS
 from pathlib import Path
 
@@ -10,20 +10,17 @@ from pathlib import Path
 # 2) limpiar el texto del articulo para evitar problemas en la conversion a voz
 # 3) dividir el texto en partes mas pequeñas para evitar limites de gTTS
 # 4) #detectar el idioma del texto para usarlo en gTTS
-#
+# 5) convertir el texto a voz y guardar el archivo mp3
 
 
 ## Falta el codigo de desgargar articulo usando extract_article.py
 
-
+# Intentar usar langdetect si está instalado (para detectar idioma)
 try:
-    nltk.data.find(
-        "tokenizers/punkt"
-    )  ## Busca el paquete punkt de nltk si ya esta descargado sino lo descarga en la siguiente linea
-except LookupError:
-    nltk.download("punkt")
-
-from nltk.tokenize import sent_tokenize
+    from langdetect import detect, LangDetectException
+except Exception:
+    detect = None
+    LangDetectException = Exception
 
 
 ## funcion para obtener titulo para el audio
@@ -51,9 +48,28 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
+def dividir_en_oraciones(texto: str):
+    """
+    Divide el texto en oraciones de forma sencilla usando expresiones regulares.
+    No es perfecto como NLTK, pero es suficiente para este proyecto.
+    """
+    partes = re.split(r"([\.!?]\s+)", texto)
+    oraciones = []
+
+    for i in range(0, len(partes), 2):
+        frase = partes[i]
+        separador = partes[i + 1] if i + 1 < len(partes) else ""
+        oracion_completa = (frase + separador).strip()
+        if oracion_completa:
+            oraciones.append(oracion_completa)
+
+    return oraciones or [texto]
+
+
 ## funcion para dividir el texto en partes mas pequeñas
 def dividir_texto_en_bloques_por_oraciones(
-    texto: str, limite_caracteres: int = 4000, idioma_nltk: str = "spanish"
+    texto: str,
+    limite_caracteres: int = 4000,
 ):
     """
     Divide un texto largo en bloques más pequeños respetando las oraciones completas.
@@ -61,7 +77,7 @@ def dividir_texto_en_bloques_por_oraciones(
     """
 
     # 1) Dividir el texto en oraciones completas
-    lista_oraciones = sent_tokenize(texto, language=idioma_nltk)
+    lista_oraciones = dividir_en_oraciones(texto)
 
     # 2) Variables de trabajo más claras
     bloques_finales = []  # Resultado final (lista de bloques)
@@ -97,15 +113,11 @@ def detectar_idioma_del_texto(texto: str, idioma_por_defecto: str = "es") -> str
     """
 
     # Intentar importar langdetect
-    try:
-        from langdetect import detect, LangDetectException
-    except Exception:
-        # Si langdetect no está instalado
+    if detect is None:
         return idioma_por_defecto
 
-    # Intentar detectar el idioma
     try:
-        codigo_detectado = detect(texto)  # ejemplo: 'en', 'es', 'pt'
+        codigo_detectado = detect(texto)
     except LangDetectException:
         return idioma_por_defecto
 
@@ -152,20 +164,10 @@ def texto_a_mp3(
     # → Si no, detectar automáticamente
     idioma_final = idioma_forzado or detectar_idioma_del_texto(texto_limpio)
 
-    # Convertir el idioma detectado a formato que NLTK entiende
-    mapa_idiomas_nltk = {
-        "es": "spanish",
-        "en": "english",
-        "pt": "portuguese",
-        "fr": "french",
-        "de": "german",
-        "it": "italian",
-    }
-    idioma_nltk = mapa_idiomas_nltk.get(idioma_final, "spanish")
-
     # Dividir texto en bloques manejables
     bloques = dividir_texto_en_bloques_por_oraciones(
-        texto=texto_limpio, limite_caracteres=limite_caracteres, idioma_nltk=idioma_nltk
+        texto=texto_limpio,
+        limite_caracteres=limite_caracteres,
     )
 
     # Crear nombre base del archivo
