@@ -23,16 +23,18 @@ def extract_article_text(url):
     """
     try:
         # Descarga manual del HTML (más seguro que article.download())
-        response = requests.get(url, headers=HEADERS, timeout=20, allow_redirects=True)
+        response = requests.get(
+            url, headers=HEADERS, timeout=20, allow_redirects=True
+        )  ##
         print(
             f"[DEBUG] {response.status_code} {response.reason} -> final URL: {response.url}"
         )
-        response.raise_for_status()
+        response.raise_for_status()  ##
 
         # Pasa el HTML descargado a Newspaper3k
         article = Article(url)
-        article.set_html(response.text)
-        article.parse()
+        article.set_html(response.text)  ### convierte el HTML en un objeto Newspaper3k
+        article.parse()  ## parsea el HTML para extraer el contenido
 
         # Devuelve el objeto completo para poder acceder a title, authors, text...
         return article
