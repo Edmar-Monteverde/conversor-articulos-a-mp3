@@ -39,7 +39,7 @@ pip install -r requirements.txt
 
 2. Ejecutar la aplicación:
     ```bash
-    python src/main.py
+    python main.py
     ```
 
 3. Introducir la URL cuando lo pida  el programa, ejemplo:
@@ -48,7 +48,7 @@ pip install -r requirements.txt
     Introduce la URL del artículo: https://martinfowler.com/articles/microservices.html
     ```
 
-4. Esperar que se genere el audio MP3.
+4. Esperar a que se genere el audio MP3.
     Los archivos MP3 se generan en la carpeta: 
     outputs/
 
@@ -66,10 +66,9 @@ pip install -r requirements.txt
 ├── outputs/
 └── README.md
 
-
 ```
 
-## Flujo del Programa 
+## Flujo  del Programa 
 
 1.El usuario escribe una URL.
 

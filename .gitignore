@@ -1,0 +1,19 @@
+# Carpeta de salidas de audio
+outputs/
+
+# Archivos temporales
+*.mp3
+
+# Entornos virtuales
+venv/
+.venv/
+
+# Cachés de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db

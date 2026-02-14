@@ -1,1 +1,8 @@
+<<<<<<< HEAD
 
+=======
+requests
+newspaper3k
+gTTS
+langdetect
+>>>>>>> 60297b1 (Modificacion en estructura y mejoras del README)
