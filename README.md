@@ -94,6 +94,21 @@ pip install -r requirements.txt
     - Los MP3 se guardan en outputs/.
 
 
+algunos ejemplos web:
+
+https://en.wikipedia.org/wiki/Software_engineering
+https://en.wikipedia.org/wiki/Software_engineering
+
+https://martinfowler.com/articles/microservices.html
+
+
+
+En README: “Recomendado Python 3.10–3.11”
+
+
+
+
+
 
 
 

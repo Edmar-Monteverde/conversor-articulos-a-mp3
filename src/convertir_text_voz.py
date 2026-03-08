@@ -48,7 +48,7 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
-def dividir_en_oraciones(texto: str):
+def dividir_en_oraciones(texto: str) -> list[str]:
     """
     Divide el texto en oraciones de forma sencilla usando expresiones regulares.
 
@@ -74,7 +74,7 @@ def dividir_en_oraciones(texto: str):
 def dividir_texto_en_bloques_por_oraciones(
     texto: str,
     limite_caracteres: int = 4000,
-):
+) -> list[str]:
     """
     Divide un texto largo en bloques más pequeños respetando las oraciones completas.
     Cada bloque tendrá un máximo aproximado de 'limite_caracteres'.
@@ -146,7 +146,7 @@ def texto_a_mp3(
     idioma_forzado: str | None = None,
     modo_lento: bool = False,
     limite_caracteres: int = 4000,
-):
+) -> tuple[list[Path], str]:
     """
     Convierte un texto largo en uno o varios archivos MP3 usando gTTS.
     - Limpia el texto
@@ -166,7 +166,7 @@ def texto_a_mp3(
     # Elegir el idioma:
     # → Si el usuario pasa uno forzado, se usa ese
     # → Si no, detectar automáticamente
-    idioma_final = idioma_forzado or detectar_idioma_del_texto(texto_limpio)
+    idioma_final = (idioma_forzado or detectar_idioma_del_texto(texto_limpio)).lower()
 
     # Dividir texto en bloques manejables
     bloques = dividir_texto_en_bloques_por_oraciones(
